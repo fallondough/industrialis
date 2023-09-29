@@ -78,7 +78,7 @@ public class SingularityArmorItem extends ArmorItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.empty());
-        tooltip.add(Text.translatable("When on " + getSlotType().getName() + ":").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.modifiers." + getSlotType().getName()).formatted(Formatting.GRAY));
         tooltip.add(Text.translatable("attribute.modifier.plus.0","¹⁄₄ of ∞", Text.translatable("attribute.name.generic.armor")).formatted(Formatting.BLUE));
         super.appendTooltip(stack, world, tooltip, context);
     }
