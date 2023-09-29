@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "industrialis:block/bauxite_ore"
+  }
+}
