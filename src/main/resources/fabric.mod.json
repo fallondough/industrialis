@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "industrialis",
+  "version": "${version}",
+  "name": "industrialis",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/PC/industrialis 1.19.3"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/industrialis/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "fall.industrialis.client.IndustrialisClient"
+    ],
+    "main": [
+      "fall.industrialis.Industrialis"
+    ]
+  },
+  "mixins": [
+    "industrialis.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
