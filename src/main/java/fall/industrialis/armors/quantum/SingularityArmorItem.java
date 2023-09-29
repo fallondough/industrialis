@@ -1,5 +1,6 @@
 package fall.industrialis.armors.quantum;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
@@ -85,6 +86,6 @@ public class SingularityArmorItem extends ArmorItem {
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return super.getAttributeModifiers(EquipmentSlot.OFFHAND);
+        return ImmutableMultimap.of();
     }
  }
