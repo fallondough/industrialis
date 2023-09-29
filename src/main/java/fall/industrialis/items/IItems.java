@@ -44,8 +44,6 @@ public class IItems {
             new Item(new FabricItemSettings()));
 
     //armours
-//    public static final Item MINING_HELMET = registerItem("mining_helmet",
-//            new MiningHelmet(new FabricItemSettings()));
     public static final Item QUANTUM_HELMET = registerItem("quantum_helmet",
             new QuantumArmorItem(EquipmentSlot.HEAD, new FabricItemSettings()));
     public static final Item QUANTUM_CHESTPLATE = registerItem("quantum_chestplate",
