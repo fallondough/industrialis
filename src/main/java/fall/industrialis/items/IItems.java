@@ -22,6 +22,8 @@ public class IItems {
     //items
     public static final Item RESIN = registerItem("resin",
             new Item(new FabricItemSettings()));
+    public static final Item BASIC_PROCESSOR = registerItem("basic_processor",
+            new Item(new FabricItemSettings()));
     public static final Item TIN_INGOT = registerItem("tin_ingot",
             new Item(new FabricItemSettings()));
     public static final Item TIN_DUST = registerItem("tin_dust",
