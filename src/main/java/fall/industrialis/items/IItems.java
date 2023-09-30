@@ -20,6 +20,8 @@ public class IItems {
     public static final Collection<ItemStack> ITEMS = new ArrayList<>();
 
     //items
+    public static final Item RESIN = registerItem("resin",
+            new Item(new FabricItemSettings()));
     public static final Item TIN_INGOT = registerItem("tin_ingot",
             new Item(new FabricItemSettings()));
     public static final Item TIN_DUST = registerItem("tin_dust",
