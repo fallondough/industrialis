@@ -1,5 +1,6 @@
-package fall.industrialis;
+package fall.industrialis.blocks;
 
+import fall.industrialis.Industrialis;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
