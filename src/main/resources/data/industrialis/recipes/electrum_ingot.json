@@ -1,0 +1,11 @@
+{
+  "type": "industrialis:electric_furnace",
+  "ingredients": [
+    {
+      "item": "industrialis:electrum_dust"
+    }
+  ],
+  "output": {
+    "item": "industrialis:electrum_ingot"
+  }
+}

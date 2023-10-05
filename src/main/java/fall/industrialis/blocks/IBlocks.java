@@ -1,6 +1,7 @@
 package fall.industrialis.blocks;
 
 import fall.industrialis.Industrialis;
+import fall.industrialis.mechanisms.ElectricFurnaceBlock;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -22,7 +23,7 @@ public class IBlocks {
             new Block(FabricBlockSettings.of(Material.STONE).strength(4f).requiresTool()));
 
     public static final Block ELECTRIC_FURNACE = registerBlock("electric_furnace",
-            new Block(FabricBlockSettings.of(Material.STONE).strength(4f).requiresTool()));
+            new ElectricFurnaceBlock(FabricBlockSettings.of(Material.STONE).strength(4f).requiresTool()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
