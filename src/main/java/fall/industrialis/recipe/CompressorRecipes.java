@@ -2,8 +2,6 @@ package fall.industrialis.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.SharedConstants;
-import net.minecraft.datafixer.fix.FurnaceRecipesFix;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -13,17 +11,17 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-import java.awt.*;
-
-public class ElectricFurnaceRecipes implements Recipe<SimpleInventory> {
+public class CompressorRecipes implements Recipe<SimpleInventory> {
     private final Identifier id;
     private final ItemStack output;
     private final DefaultedList<Ingredient> recipeItems;
+    private final int cookTime;
 
-    public ElectricFurnaceRecipes(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems) {
+    public CompressorRecipes(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems, int cookTime) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
+        this.cookTime = cookTime;
     }
 
     @Override
@@ -49,6 +47,9 @@ public class ElectricFurnaceRecipes implements Recipe<SimpleInventory> {
     public ItemStack getOutput() {
         return output.copy();
     }
+    public int getCookTime() {
+        return cookTime;
+    }
 
     @Override
     public Identifier getId() {
@@ -65,20 +66,21 @@ public class ElectricFurnaceRecipes implements Recipe<SimpleInventory> {
         return Type.INSTANCE;
     }
 
-    public static class Type implements RecipeType<ElectricFurnaceRecipes> {
+    public static class Type implements RecipeType<CompressorRecipes> {
         private Type() {}
 
         public static final Type INSTANCE = new Type();
-        public static final String ID = "electric_furnace";
+        public static final String ID = "compressor";
     }
 
-    public static class Serializer implements RecipeSerializer<ElectricFurnaceRecipes> {
+    public static class Serializer implements RecipeSerializer<CompressorRecipes> {
         public static final Serializer INSTANCE = new Serializer();
-        public static final String ID = "electric_furnace";
+        public static final String ID = "compressor";
 
         @Override
-        public ElectricFurnaceRecipes read(Identifier id, JsonObject json) {
+        public CompressorRecipes read(Identifier id, JsonObject json) {
             ItemStack output = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "output"));
+            int cookTime = JsonHelper.getShort(json, "cookTime");
 
             JsonArray ingredients = JsonHelper.getArray(json, "ingredients");
             DefaultedList<Ingredient> inputs = DefaultedList.ofSize(1, Ingredient.EMPTY);
@@ -87,11 +89,11 @@ public class ElectricFurnaceRecipes implements Recipe<SimpleInventory> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new ElectricFurnaceRecipes(id, output, inputs);
+            return new CompressorRecipes(id, output, inputs, cookTime);
         }
 
         @Override
-        public ElectricFurnaceRecipes read(Identifier id, PacketByteBuf buf) {
+        public CompressorRecipes read(Identifier id, PacketByteBuf buf) {
             DefaultedList<Ingredient> inputs = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
@@ -99,12 +101,13 @@ public class ElectricFurnaceRecipes implements Recipe<SimpleInventory> {
             }
 
             ItemStack output = buf.readItemStack();
-            return new ElectricFurnaceRecipes(id, output, inputs);
+            return new CompressorRecipes(id, output, inputs, buf.getShort(0));
         }
 
         @Override
-        public void write(PacketByteBuf buf, ElectricFurnaceRecipes recipe) {
+        public void write(PacketByteBuf buf, CompressorRecipes recipe) {
             buf.writeInt(recipe.getIngredients().size());
+            buf.writeShort(recipe.getCookTime());
 
             for (Ingredient ingredient : recipe.getIngredients()) {
                 ingredient.write(buf);

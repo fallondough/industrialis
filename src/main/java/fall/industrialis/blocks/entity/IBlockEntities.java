@@ -9,12 +9,13 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class IBlockEntities {
-    public static BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
+    //public static BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_FURNACE;
+    public static BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR;
 
     public static void registerBlockEntities() {
-        ELECTRIC_FURNACE = Registry.register(Registries.BLOCK_ENTITY_TYPE,
-                new Identifier(Industrialis.MOD_ID, "electric_furnace"),
-                FabricBlockEntityTypeBuilder.create(ElectricFurnaceBlockEntity::new,
-                        IBlocks.ELECTRIC_FURNACE).build(null));
+        ELECTRIC_COMPRESSOR = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+                new Identifier(Industrialis.MOD_ID, "electric_compressor"),
+                FabricBlockEntityTypeBuilder.create(ElectricCompressorBlockEntity::new,
+                        IBlocks.ELECTRIC_COMPRESSOR).build(null));
     }
 }

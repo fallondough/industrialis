@@ -1,5 +1,5 @@
 {
-  "type": "industrialis:electric_furnace",
+  "type": "industrialis:compressor",
   "ingredients": [
     {
       "item": "industrialis:electrum_dust"
@@ -7,5 +7,6 @@
   ],
   "output": {
     "item": "industrialis:electrum_ingot"
-  }
+  },
+  "cookTime": 200
 }

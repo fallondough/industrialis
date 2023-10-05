@@ -3,6 +3,7 @@ package fall.industrialis.tools;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -26,7 +27,7 @@ public class SingularitySword extends Item {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         target.kill();
 
-        return super.postHit(stack, target, attacker);
+        return true;
     }
 
     @Override
@@ -34,6 +35,12 @@ public class SingularitySword extends Item {
         tooltip.add(Text.empty());
         tooltip.add(Text.translatable("item.modifiers.mainhand").formatted(Formatting.GRAY));
         tooltip.add(Text.translatable(" ∞ ").append(Text.translatable("attribute.name.generic.attack_damage")).formatted(Formatting.DARK_GREEN));
+
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    @Override
+    public boolean allowContinuingBlockBreaking(PlayerEntity player, ItemStack oldStack, ItemStack newStack) {
+        return false;
     }
 }

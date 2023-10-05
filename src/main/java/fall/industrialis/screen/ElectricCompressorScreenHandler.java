@@ -1,7 +1,5 @@
 package fall.industrialis.screen;
 
-import fall.industrialis.blocks.entity.ElectricFurnaceBlockEntity;
-import fall.industrialis.screen.slot.IFuelSlot;
 import fall.industrialis.screen.slot.IResultSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,20 +9,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import org.jetbrains.annotations.Nullable;
 
-public class ElectricFurnaceScreenHandler extends ScreenHandler {
+public class ElectricCompressorScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
 
-    public ElectricFurnaceScreenHandler(int syncId, PlayerInventory inventory) {
+    public ElectricCompressorScreenHandler(int syncId, PlayerInventory inventory) {
         this(syncId, inventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
     }
 
-    public ElectricFurnaceScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(IScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER, syncId);
+    public ElectricCompressorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+        super(IScreenHandlers.ELECTRIC_COMPRESSOR_SCREEN_HANDLER, syncId);
         checkSize(inventory, 2);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);

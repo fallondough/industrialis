@@ -1,7 +1,6 @@
 package fall.industrialis.mechanisms;
 
-import com.mojang.datafixers.types.templates.Named;
-import fall.industrialis.blocks.entity.ElectricFurnaceBlockEntity;
+import fall.industrialis.blocks.entity.ElectricCompressorBlockEntity;
 import fall.industrialis.blocks.entity.IBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,10 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricFurnaceBlock extends BlockWithEntity implements BlockEntityProvider {
+public class ElectricCompressorBlock extends BlockWithEntity implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    public ElectricFurnaceBlock(Settings settings) {
+    public ElectricCompressorBlock(Settings settings) {
         super(settings);
     }
 
@@ -31,8 +30,8 @@ public class ElectricFurnaceBlock extends BlockWithEntity implements BlockEntity
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof ElectricFurnaceBlockEntity) {
-                ItemScatterer.spawn(world, pos, (ElectricFurnaceBlockEntity) blockEntity);
+            if (blockEntity instanceof ElectricCompressorBlockEntity) {
+                ItemScatterer.spawn(world, pos, (ElectricCompressorBlockEntity) blockEntity);
                 world.updateComparators(pos, this);
             }
 
@@ -66,12 +65,12 @@ public class ElectricFurnaceBlock extends BlockWithEntity implements BlockEntity
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ElectricFurnaceBlockEntity(pos, state);
+        return new ElectricCompressorBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, IBlockEntities.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity::tick);
+        return checkType(type, IBlockEntities.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity::tick);
     }
 }

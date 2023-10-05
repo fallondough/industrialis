@@ -8,6 +8,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 public class IndustrialisClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HandledScreens.register(IScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER, ElectricFurnaceScreen::new);
+        HandledScreens.register(IScreenHandlers.ELECTRIC_COMPRESSOR_SCREEN_HANDLER, ElectricFurnaceScreen::new);
     }
 }

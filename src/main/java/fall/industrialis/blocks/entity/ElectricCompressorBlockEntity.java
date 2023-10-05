@@ -1,27 +1,21 @@
 package fall.industrialis.blocks.entity;
 
-import com.mojang.serialization.Decoder;
-import fall.industrialis.items.IItems;
 import fall.industrialis.items.inventory.ImplementedInventory;
-import fall.industrialis.mechanisms.ElectricFurnaceBlock;
-import fall.industrialis.recipe.ElectricFurnaceRecipes;
-import fall.industrialis.screen.ElectricFurnaceScreenHandler;
+import fall.industrialis.mechanisms.ElectricCompressorBlock;
+import fall.industrialis.recipe.CompressorRecipes;
+import fall.industrialis.screen.ElectricCompressorScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -31,29 +25,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class ElectricFurnaceBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class ElectricCompressorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     protected final PropertyDelegate propertyDelegate;
     private int cookTime = 0;
     private static int cookTimeTotal = 200;
 
-    public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(IBlockEntities.ELECTRIC_FURNACE, pos, state);
+    public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
+        super(IBlockEntities.ELECTRIC_COMPRESSOR, pos, state);
 
         this.propertyDelegate = new PropertyDelegate() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return ElectricFurnaceBlockEntity.this.cookTime;
-                    case 1: return ElectricFurnaceBlockEntity.this.cookTimeTotal;
+                    case 0: return ElectricCompressorBlockEntity.this.cookTime;
+                    case 1: return ElectricCompressorBlockEntity.this.cookTimeTotal;
                     default: return 0;
                 }
             }
 
             public void set(int index, int value) {
                 switch(index) {
-                    case 0: ElectricFurnaceBlockEntity.this.cookTime = value; break;
-                    case 1: ElectricFurnaceBlockEntity.this.cookTimeTotal = value; break;
+                    case 0: ElectricCompressorBlockEntity.this.cookTime = value; break;
+                    case 1: ElectricCompressorBlockEntity.this.cookTimeTotal = value; break;
                 }
             }
 
@@ -76,21 +70,29 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements NamedScre
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return new ElectricFurnaceScreenHandler(syncId, inv, this, this.propertyDelegate);
+        return new ElectricCompressorScreenHandler(syncId, inv, this, this.propertyDelegate);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+
+        nbt.putShort("CookTime", (short)this.cookTime);
+        nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
+
         Inventories.writeNbt(nbt, inventory);
-        nbt.putInt("electric_furnace.progress", cookTime);
+        nbt.putInt("compressor.progress", cookTime);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        Inventories.readNbt(nbt, inventory);
         super.readNbt(nbt);
-        cookTime = nbt.getInt("electric_furnace.progress");
+
+        this.cookTime = nbt.getShort("CookTime");
+        this.cookTimeTotal = nbt.getShort("CookTimeTotal");
+
+        Inventories.readNbt(nbt, inventory);
+        cookTime = nbt.getInt("compressor.progress");
     }
 
     private void resetProgress() {
@@ -99,7 +101,7 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements NamedScre
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction side) {
-        Direction direction = this.getWorld().getBlockState(this.pos).get(ElectricFurnaceBlock.FACING);
+        Direction direction = this.getWorld().getBlockState(this.pos).get(ElectricCompressorBlock.FACING);
 
         if (side == Direction.UP || side == direction.DOWN) {
             return false;
@@ -113,9 +115,10 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements NamedScre
         return ImplementedInventory.super.canExtract(slot, stack, side);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, ElectricFurnaceBlockEntity blockEntity) {
+    public static void tick(World world, BlockPos pos, BlockState state, ElectricCompressorBlockEntity blockEntity) {
         if (!world.isClient()) {
             if (hasRecipe(blockEntity)) {
+                setCookTimeTotal(blockEntity);
                 blockEntity.cookTime++;
                 markDirty(world, pos, state);
                 if (blockEntity.cookTime >= blockEntity.cookTimeTotal) {
@@ -128,30 +131,41 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements NamedScre
         }
     }
 
-    private static void craftItem(ElectricFurnaceBlockEntity entity) {
+    private static void setCookTimeTotal(ElectricCompressorBlockEntity entity) {
         SimpleInventory inventory = new SimpleInventory(entity.size());
         for (int i = 0; i < entity.size(); i++) {
             inventory.setStack(i, entity.getStack(i));
         }
 
-        Optional<ElectricFurnaceRecipes> recipe = entity.getWorld().getRecipeManager().getFirstMatch(ElectricFurnaceRecipes.Type.INSTANCE, inventory, entity.getWorld());
+        Optional<CompressorRecipes> recipe = entity.getWorld().getRecipeManager().getFirstMatch(CompressorRecipes.Type.INSTANCE, inventory, entity.getWorld());
+        entity.propertyDelegate.set(1, recipe.get().getCookTime());
+    }
+
+    private static void craftItem(ElectricCompressorBlockEntity entity) {
+        SimpleInventory inventory = new SimpleInventory(entity.size());
+        for (int i = 0; i < entity.size(); i++) {
+            inventory.setStack(i, entity.getStack(i));
+        }
+
+        Optional<CompressorRecipes> recipe = entity.getWorld().getRecipeManager().getFirstMatch(CompressorRecipes.Type.INSTANCE, inventory, entity.getWorld());
 
         if (hasRecipe(entity)) {
             entity.removeStack(0, 1);
 
             entity.setStack(1, new ItemStack(recipe.get().getOutput().getItem(), entity.getStack(1).getCount() + 1));
+            //entity.propertyDelegate.set(1, recipe.get().getCookTime());
 
             entity.resetProgress();
         }
     }
 
-    private static boolean hasRecipe(ElectricFurnaceBlockEntity entity) {
+    private static boolean hasRecipe(ElectricCompressorBlockEntity entity) {
         SimpleInventory inventory = new SimpleInventory(entity.size());
         for (int i = 0; i < entity.size(); i++) {
             inventory.setStack(i, entity.getStack(i));
         }
 
-        Optional<ElectricFurnaceRecipes> match = entity.getWorld().getRecipeManager().getFirstMatch(ElectricFurnaceRecipes.Type.INSTANCE, inventory, entity.getWorld());
+        Optional<CompressorRecipes> match = entity.getWorld().getRecipeManager().getFirstMatch(CompressorRecipes.Type.INSTANCE, inventory, entity.getWorld());
 
         return match.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
                 canInsertItemIntoOutputSlot(inventory, match.get().getOutput().getItem());
